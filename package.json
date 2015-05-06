@@ -1,0 +1,23 @@
+{
+  "name": "My-Lodash",
+  "version": "1.0.0",
+  "description": "My implementation of a Javascript utility library similar to lodash",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yhfyhf/My-Lodash.git"
+  },
+  "author": "Haofei Ying",
+  "license": "IDS(I Don't Care)",
+  "bugs": {
+    "url": "https://github.com/yhfyhf/My-Lodash/issues"
+  },
+  "homepage": "https://github.com/yhfyhf/My-Lodash",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5"
+  }
+}
