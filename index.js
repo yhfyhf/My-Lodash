@@ -92,6 +92,35 @@ var _ = {
             }
         };
         return curried;
+    },
+
+    /*
+     * Curry a function from right to left.
+     */
+    curryRight: function(func) {
+        var argc = func.length;
+        var curried = function () {
+            var argv = Array.prototype.slice.call(arguments);
+            if (arguments.length >= argc) {
+                return func.apply(this, argv.reverse());
+            } else {
+                return function() {
+                    return curried.apply(this, Array.prototype.slice.call(arguments).reverse()
+                                                    .concat(argv.reverse())
+                                                    .reverse());
+                };
+            }
+        };
+        return curried;
+    },
+
+    /*
+     * Invoke `func` after `wait` milliseconds.
+     */
+    delay: function(func, wait, args) {
+        var res;
+        setTimeout(res=func.apply(this, args), wait);
+        return res;
     }
 };
 
