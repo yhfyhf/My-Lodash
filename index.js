@@ -121,6 +121,38 @@ var _ = {
         var res;
         setTimeout(res=func.apply(this, args), wait);
         return res;
+    },
+
+    /*
+     * Used for creating `flow` and `flowRight`.
+     */
+    createFlow: function(fromRight, args) {
+        var functions = args;
+        if (fromRight) {
+            functions = functions.reverse();
+        }
+        return function() {
+            var index = 0;
+            var result = functions[index].apply(this, arguments);
+            while (++index < functions.length) {
+                result = functions[index].call(this, result);
+            }
+            return result;
+        };
+    },
+
+    /*
+     * Successively invoke given functions.
+     */
+    flow: function() {
+        return _.createFlow(false, Array.prototype.slice.call(arguments));
+    },
+
+    /*
+     * Successively invoke given functions from right to left.
+     */
+    flowRight: function() {
+        return _.createFlow(true, Array.prototype.slice.call(arguments));
     }
 };
 
