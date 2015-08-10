@@ -46,7 +46,7 @@ var _ = {
         };
     },
 
-    /*
+    /**
      * Return a function in which `func` is called less than `n` times. Subsequent
      * calls return the result of last `func` invocation.
      */
@@ -60,7 +60,7 @@ var _ = {
         };
     },
 
-    /*
+    /**
      * Opposite of `before`, return a function that invoke `func` once it is called
      * at least `n` times.
      */
@@ -72,7 +72,7 @@ var _ = {
         };
     },
 
-    /*
+    /**
      * Return a function that accepts arguments of `func`. When all arguments are
      * provided, return the result of func, else return a function that accepts the
      * remaining arguments.
@@ -94,7 +94,7 @@ var _ = {
         return curried;
     },
 
-    /*
+    /**
      * Curry a function from right to left.
      */
     curryRight: function(func) {
@@ -114,7 +114,7 @@ var _ = {
         return curried;
     },
 
-    /*
+    /**
      * Invoke `func` after `wait` milliseconds.
      */
     delay: function(func, wait, args) {
@@ -123,7 +123,7 @@ var _ = {
         return res;
     },
 
-    /*
+    /**
      * Used for creating `flow` and `flowRight`.
      */
     createFlow: function(fromRight, args) {
@@ -141,18 +141,53 @@ var _ = {
         };
     },
 
-    /*
+    /**
      * Successively invoke given functions.
      */
     flow: function() {
         return _.createFlow(false, Array.prototype.slice.call(arguments));
     },
 
-    /*
+    /**
      * Successively invoke given functions from right to left.
      */
     flowRight: function() {
         return _.createFlow(true, Array.prototype.slice.call(arguments));
+    },
+
+    /**
+     * Create a function that accepts up to `n` arguments.
+     */
+    ary: function(func, n) {
+        n = n ? n : func.length;
+        return function() {
+            return func.apply(this, Array.prototype.slice.call(arguments).slice(0, n));
+        };
+    },
+
+    /**
+     * Create a function that accepts arguments be modified by each transform function.
+     */
+    modArgs: function(func) {
+        var transforms = Array.prototype.slice.call(arguments);
+        return function() {
+            var index = 0;
+            var args = Array.prototype.slice.call(arguments);
+            // console.log(args);
+            while (++index < transforms.length) {
+                args[index-1] = transforms[index](args[index-1]);
+            }
+            return func.apply(this, args);
+        };
+    },
+
+    /*
+     * Create a function that negates the result of `func`.
+     */
+    negate: function(func) {
+        return function() {
+            return !func.apply(this, arguments);
+        };
     }
 };
 
