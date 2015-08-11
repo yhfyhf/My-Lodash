@@ -1,15 +1,20 @@
+var TYPE_FUNC_ERROR = 'Expected a function';
+
 var _ = {
 
     /**
      * Restrict the `func` to be invoked only once.
      */
     once: function(func) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
         var invoked = false;
         var res;
         return function() {
             if (!invoked) {
                 invoked = true;
-                res = func();
+                res = func.apply(this, arguments);
                 return res;
             } else {
                 return res;
@@ -22,6 +27,9 @@ var _ = {
      * the caching key.
      */
     memoize: function(func, resolver) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
         var cache = {};
         return function(arg) {
             var key = arg;
@@ -41,6 +49,9 @@ var _ = {
      * Force `this` in `func` to be a context object.
      */
     bind: function(func, context) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
         return function() {
             return func.call(context);
         };
@@ -51,10 +62,13 @@ var _ = {
      * calls return the result of last `func` invocation.
      */
     before: function(n, func) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
         var res;
         return function() {
             if (--n > 0) {
-                res = func();
+                res = func.apply(this, arguments);
             }
             return res;
         };
@@ -65,6 +79,9 @@ var _ = {
      * at least `n` times.
      */
     after: function(n, func) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
         return function() {
             if (--n < 1) {
                 return func();
@@ -78,6 +95,9 @@ var _ = {
      * remaining arguments.
      */
     curry: function(func) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
         var argc = func.length;
         var curried = function () {
             if (arguments.length >= argc) {
@@ -98,6 +118,9 @@ var _ = {
      * Curry a function from right to left.
      */
     curryRight: function(func) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
         var argc = func.length;
         var curried = function () {
             var argv = Array.prototype.slice.call(arguments);
@@ -118,6 +141,9 @@ var _ = {
      * Invoke `func` after `wait` milliseconds.
      */
     delay: function(func, wait, args) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
         var res;
         setTimeout(res=func.apply(this, args), wait);
         return res;
@@ -159,6 +185,9 @@ var _ = {
      * Create a function that accepts up to `n` arguments.
      */
     ary: function(func, n) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
         n = n ? n : func.length;
         return function() {
             return func.apply(this, Array.prototype.slice.call(arguments).slice(0, n));
@@ -169,11 +198,13 @@ var _ = {
      * Create a function that accepts arguments be modified by each transform function.
      */
     modArgs: function(func) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
         var transforms = Array.prototype.slice.call(arguments);
         return function() {
             var index = 0;
             var args = Array.prototype.slice.call(arguments);
-            // console.log(args);
             while (++index < transforms.length) {
                 args[index-1] = transforms[index](args[index-1]);
             }
@@ -185,8 +216,28 @@ var _ = {
      * Create a function that negates the result of `func`.
      */
     negate: function(func) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
         return function() {
             return !func.apply(this, arguments);
+        };
+    },
+
+    /*
+     * Reorder arguments specified by given indexes.
+     */
+    rearg: function(func) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
+        var indexes = Array.prototype.slice.call(arguments).slice(1);
+        return function() {
+            var args = Array.prototype.slice.call(arguments);
+            for (var i = 0; i < indexes.length; i++) {
+                args[i] = arguments[indexes[i]];
+            }
+            return func.apply(this, args);
         };
     }
 };

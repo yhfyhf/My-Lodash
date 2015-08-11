@@ -297,10 +297,20 @@ describe("modArgs", function() {
 
 
 describe("negate", function() {
-    it("negate the result of the predicate function.", function() {
+    it("negate the result of the predicate function", function() {
         var negated = _.negate(function(n) {
             return n % 2 === 0;
         });
         assert.deepEqual([1, 2, 3, 4].filter(negated), [1, 3]);
+    });
+});
+
+
+describe("rearg", function() {
+    it("rearrange the arguments specified by indexes", function() {
+        var rearged = _.rearg(function(a, b, c) {
+            return [a, b, c];
+        }, 2, 0, 1);
+        assert.deepEqual(rearged('b', 'c', 'a'), ['a', 'b', 'c']);
     });
 });
