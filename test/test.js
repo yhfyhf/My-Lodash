@@ -314,3 +314,15 @@ describe("rearg", function() {
         assert.deepEqual(rearged('b', 'c', 'a'), ['a', 'b', 'c']);
     });
 });
+
+
+describe("wrap", function() {
+    it("provides value to the wrapper function as its first argument", function() {
+        var p = _.wrap(function(str) {
+            return str;
+        }, function(func, text) {
+            return '<p>' + func(text) + '</p>';
+        });
+        assert.equal(p('abc'), '<p>abc</p>');
+    });
+});

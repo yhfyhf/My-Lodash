@@ -103,10 +103,10 @@ var _ = {
             if (arguments.length >= argc) {
                 return func.apply(this, arguments);
             } else {
-                var argv = arguments;
+                var args = arguments;
                 return function() {
-                    argv = Array.prototype.slice.call(argv);
-                    return curried.apply(this, argv.concat(
+                    args = Array.prototype.slice.call(args);
+                    return curried.apply(this, args.concat(
                         Array.prototype.slice.call(arguments)));
                 };
             }
@@ -123,13 +123,13 @@ var _ = {
         }
         var argc = func.length;
         var curried = function () {
-            var argv = Array.prototype.slice.call(arguments);
+            var args = Array.prototype.slice.call(arguments);
             if (arguments.length >= argc) {
-                return func.apply(this, argv.reverse());
+                return func.apply(this, args.reverse());
             } else {
                 return function() {
                     return curried.apply(this, Array.prototype.slice.call(arguments).reverse()
-                                                    .concat(argv.reverse())
+                                                    .concat(args.reverse())
                                                     .reverse());
                 };
             }
@@ -237,6 +237,23 @@ var _ = {
             for (var i = 0; i < indexes.length; i++) {
                 args[i] = arguments[indexes[i]];
             }
+            return func.apply(this, args);
+        };
+    },
+
+    /*
+     * Create a function that provides value to the wrapper function `func` as its first 
+     * argument. Additional arguments passed to this function are appended to those
+     * provided to the wrapper function.
+     */
+    wrap: function(value, func) {
+        if (typeof func != 'function') {
+            throw new TypeError(TYPE_FUNC_ERROR);
+        }
+        var args = Array.prototype.slice.call(arguments).slice(2);
+        return function() {
+            args = Array.prototype.slice.call(arguments).concat(args);
+            args.splice(0, 0, value);
             return func.apply(this, args);
         };
     }
