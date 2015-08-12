@@ -5,8 +5,6 @@ A JavaScript utility library for a taste of functional programming.
 
 ## Quick Start
 ```javascript
-var _ = require("..");
-
 var add = function (a, b, c) {
     return Math.pow(Math.pow(a, b), c);
 };
