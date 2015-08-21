@@ -326,3 +326,20 @@ describe("wrap", function() {
         assert.equal(p('abc'), '<p>abc</p>');
     });
 });
+
+
+describe("every", function() {
+    it("returns true if all elements pass the predicate check", function() {
+        assert.equal(_.every([true, 1, null, 'yes'], Boolean), false);
+        assert.equal(_.every([false, 0, null, ''], Boolean, false), true);
+
+        var users = [
+            { 'user': 'barney', 'active': false },
+            { 'user': 'fred',   'active': false }
+        ];
+
+        assert.equal(_.every(users, {'user': 'barney', 'active': false}), false);
+        assert.equal(_.every(users, 'active'), false);
+        assert.equal(_.every(users, 'active', false), true);
+    });
+});

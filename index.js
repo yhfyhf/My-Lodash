@@ -256,6 +256,36 @@ var _ = {
             args.splice(0, 0, value);
             return func.apply(this, args);
         };
+    },
+
+    /*
+     * Check if `predicate` returns true for all elements in `collection`.
+     */
+    every: function(collection, predicate, thisArg) {
+        thisArg = thisArg === undefined ? true : thisArg;
+        var i;
+        if (typeof predicate == 'function') {
+            for (i = 0; i < collection.length; i++) {
+                if (predicate(collection[i]) != thisArg) {
+                    return false;
+                }
+            }
+        } else if (typeof predicate == 'string') {
+            for (i = 0; i < collection.length; i++) {
+                if (collection[i][predicate] != thisArg) {
+                    return false;
+                }
+            }
+        } else {
+            for (i = 0; i < collection.length; i++) {
+                for (var key in predicate) {
+                    if (predicate[key] != collection[i][key]) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 };
 
